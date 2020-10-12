@@ -2,41 +2,46 @@ import React from "react";
 
 import classes from "./Order.module.css";
 
-const Order = ({ ingredients, customer, delievery, price }) => {
-  const ingredientsKeys = Object.keys(ingredients);
-  const transformedIngredients = ingredientsKeys.map((ingredientKey) => {
-    return ingredients[ingredientKey] ? (
-      <li
-        key={ingredientKey}
+const order = (props) => {
+  const ingredients = [];
+
+  for (let ingredientName in props.ingredients) {
+    ingredients.push({
+      name: ingredientName,
+      amount: props.ingredients[ingredientName],
+    });
+  }
+
+  const ingredientOutput = ingredients.map((ig) => {
+    return (
+      <span
         style={{
-          fontWeight: "bold",
-          boxShadow: "1px 1px 3px #ccc",
-          display: "inline-block",
-          marginLeft: "10px",
-          padding: "5px 10px",
           textTransform: "capitalize",
+          display: "inline-block",
+          margin: "0 8px",
+          border: "1px solid #ccc",
+          padding: "5px",
         }}
+        key={ig.name}
       >
-        {ingredientKey} : {ingredients[ingredientKey]}
-      </li>
-    ) : null;
+        {ig.name} ({ig.amount})
+      </span>
+    );
   });
 
   return (
     <div className={classes.Order}>
-      <p>Name: {customer.name}</p>
-      <p>{customer.address.street}</p>
-      <p>{customer.address.zipCode}</p>
-      <p>{customer.address.country}</p>
-      <ul style={{ listStyle: "none", padding: "10px 30px" }}>
-        {transformedIngredients}
-      </ul>
+      <p>Name: {props.customer.name}</p>
+      <p>Address: {props.customer.street}</p>
+      <p>Email: {props.customer.email}</p>
+      <p>Ingredients: {ingredientOutput}</p>
       <p>
-        Price: <strong>USD : {price}</strong>
+        Price: <strong>USD {Number.parseFloat(props.price).toFixed(2)}</strong>
       </p>
-      <p>Delievery Method : {delievery}</p>
+      <p>Country: {props.customer.country}</p>
+      <p>Delievery Method: {props.customer.deliveryMethod}</p>
     </div>
   );
 };
 
-export default Order;
+export default order;
